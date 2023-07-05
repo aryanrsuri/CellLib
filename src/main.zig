@@ -39,8 +39,12 @@ pub fn main() !void {
     std.debug.print("{any}\n", .{output});
 
     while (!raylib.WindowShouldClose()) {
+        var i: c_int = 0;
+        while (i < 5) : (i += 1) {
+            raylib.DrawText("this", (i * 100) + 10, 10, 20, raylib.RAYWHITE);
+        }
+
         raylib.BeginDrawing();
-        raylib.DrawText("works", 10, 10, 20, raylib.RAYWHITE);
         raylib.EndDrawing();
     }
 }
