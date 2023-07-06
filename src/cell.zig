@@ -4,13 +4,13 @@
 //!     LICENCE: ../LICENSE (GNU)
 //!
 //!     Cell.zig implements Cell struct which is a unit of binary action (1 or 0)
-//!     Cell.zig implements Structure struct which contains array of Cell structture of size N and implements simulation of these Cell growth
+//!     Cell.zig implements Structure struct which contains array of Cell structure
+//!     of size N and implements simulation of these Cell growth
 
 pub const std = @import("std");
 var shuffle = std.rand.DefaultPrng.init(0);
 
-/// Cell represents a unit of binary action
-/// Either hibernating or active with a
+/// Cell represents a unit of binary action (1/0) with a
 /// current "health" where once greater than
 /// a specified mark will grow to a next "cycle"
 /// @params {bool} state
