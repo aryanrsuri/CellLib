@@ -70,7 +70,7 @@ pub fn main() !void {
     const SIZE: usize = SQ * SQ;
     const ROWS = 800;
     const COLS = 600;
-    const GEN_ITER = 100;
+    const GEN_ITER = 10;
     const WH = 3 * SQ;
     const gpa = gpa_stream.allocator();
     var rectangles = grid(SIZE, WH);
