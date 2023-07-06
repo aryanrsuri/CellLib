@@ -1,6 +1,3 @@
-FILE 
-  ISSUE(s)
-
 FILE [ /src/main.zig ]
   the y position of the rectagles goes down by some offset, need to fix
 FILE [ /src/cell.zig ]
