@@ -1,3 +1,12 @@
+//!                 Main.zig
+//!     AUTHOR 			aryanrsuri
+//!     DATE CREATED    July 4, 2023
+//!     LICENCE 		../LICENSE (GNU)
+//!
+//!     Main.zig implements cycle_flatten() priv
+//!     Main.zig implements grid() priv
+//!     Main.zig implements main() pub
+
 const std = @import("std");
 const cell = @import("cell.zig");
 const raylib = @cImport({
