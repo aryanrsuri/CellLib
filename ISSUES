@@ -1,2 +1,9 @@
-/src/main.zig
-* the y position of the rectagles goes down by some offset, need to fix
+FILE 
+  ISSUE(s)
+
+FILE [ /src/main.zig ]
+  the y position of the rectagles goes down by some offset, need to fix
+FILE [ /src/cell.zig ]
+  implement game of life
+  unsure if cell(T).stasis() actually does anything ... need to look into
+  why when I omit shuffling cell every generation, dead cells never come alive again ?
