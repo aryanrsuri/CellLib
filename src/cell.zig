@@ -1,11 +1,12 @@
 //!                 Cell.zig
-//!     AUTHOR 			aryanrsuri
 //!     DATE CREATED    July 4, 2023
-//!     LICENCE 		../LICENSE (GNU)
+//!     LICENSE        GNU
+//!     COPYRIGHT (C) 2023 aryanrsuri
 //!
 //!     Cell.zig implements Cell struct which is a unit of binary action (1 or 0)
 //!     Cell.zig implements Structure struct which contains array of Cell structure
 //!     of size N and implements simulation of these Cell growth
+//!
 
 pub const std = @import("std");
 var shuffle = std.rand.DefaultPrng.init(0);
