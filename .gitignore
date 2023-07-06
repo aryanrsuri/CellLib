@@ -2,4 +2,3 @@ zig-cache
 zig-out
 *.wasm
 *.o
-*.h

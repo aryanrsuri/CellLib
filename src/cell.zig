@@ -1,11 +1,20 @@
 pub const std = @import("std");
 var shuffle = std.rand.DefaultPrng.init(0);
 
+/// Cell represents a unit of binary action
+/// Either hibernating or active with a
+/// current "health" where once greater than
+/// a specified mark will grow to a next "cycle"
+/// @params {bool} state
+/// @params {usize} current
+/// @params {usize} cycles
 pub const Cell = struct {
     const Self = @This();
-    state: bool,
-    current: usize,
-    cycles: usize,
+    var __threshold__: usize = 128;
+    state: bool = false,
+    current: usize = 0,
+    cycles: usize = 0,
+
     pub fn init() Self {
         return .{
             .state = false,
@@ -24,25 +33,33 @@ pub const Cell = struct {
 
     pub fn grow(self: *Self, amount: usize) void {
         self.current += amount;
-        if (self.current > 128) {
+        self.state = true;
+        if (self.current > __threshold__) {
             self.state = true;
             self.cycles += 1;
+            __threshold__ += 1;
             self.current = 0;
         }
     }
 };
 
-pub const Context = enum(u8) {
+const Context = enum(u8) {
     state,
     cycles,
     verbose,
 };
 
+/// Structure represents a array of Cells that
+/// can grow, interact with neighbouring cells
 pub const Structure = struct {
     const Self = @This();
     Cells: []Cell,
     Allocator: std.mem.Allocator,
 
+    /// Initialise structure struct
+    /// @params {mem alloc} allocator
+    /// @params {usize} number of cells
+    /// @returns Structure {.cells .alloc}
     pub fn init(allocator: std.mem.Allocator, size: usize) Self {
         var stream = allocator.alloc(Cell, size) catch {
             @panic(" allocation failed ! ");
@@ -63,7 +80,15 @@ pub const Structure = struct {
         self.Cells[index].invert();
     }
 
-    fn shuffle_cells(self: *Self) !void {
+    /// Randomly set alive cells to dead and dead cells alive
+    /// This should only be run at the start to implement a
+    /// "self contained" --> cells are inverted based only on other cells
+    /// vs a
+    /// "open" --> cells are shufflled after each generation to simulate environment
+    /// structure
+    /// @params {self} *Structure
+    /// @returns {Error Void}
+    pub fn shuffle_cells(self: *Self) !void {
         var iterator: usize = 0;
         const size = self.Cells.len;
         while (iterator < size) : (iterator = iterator + 1) {
@@ -88,21 +113,32 @@ pub const Structure = struct {
         return self.Cells;
     }
 
-    pub fn cycle_cells(self: *Self, gens: usize) !void {
-        var gen: usize = 0;
-        while (gen <= gens) : (gen += 1) {
-            var curr: usize = 1;
-            while (curr < self.Cells.len - 1) : (curr += 1) {
-                var prev = self.Cells[curr - 1];
-                var peek = self.Cells[curr + 1];
-                if (prev.state and peek.state) {
-                    prev.stasis();
-                    peek.stasis();
-                    _ = try self.grow_cell(curr);
-                }
+    /// Cycle structure
+    /// @param {self} Structure*
+    /// @returns {Error Void}
+    pub fn cycle(self: *Self) !void {
+        var curr: usize = 1;
+        while (curr < self.Cells.len - 1) : (curr += 1) {
+            var prev = self.Cells[curr - 1];
+            var peek = self.Cells[curr + 1];
+            if (prev.state and peek.state) {
+                prev.stasis();
+                peek.stasis();
+                _ = try self.grow_cell(curr);
             }
+        }
 
-            _ = try self.shuffle_cells();
+        _ = try self.shuffle_cells();
+    }
+
+    /// Simulate structure for > 1 generation
+    /// @param {self} Structure *
+    /// @param {usize} gens n . gnenerations
+    /// @returns {Error Void}
+    pub fn simulate(self: *Self, generations: usize) !void {
+        var gen: usize = 0;
+        while (gen <= generations) : (gen += 1) {
+            _ = try self.cycle();
         }
     }
 
@@ -130,20 +166,10 @@ pub const Structure = struct {
     }
 };
 
-export fn render_cells(gens: usize, size: usize, index: usize) usize {
-    // var s = std.heap.wasm_allocator;
-    var s = std.heap.GeneralPurposeAllocator(.{}){};
-    const gpa = s.allocator();
-    var organism = Structure.init(gpa, size);
-    // var out = gpa.alloc(usize, size) catch @panic(" alloc failed");
-    organism.cycle_cells(gens) catch @panic("cycle failed");
-    var result: usize = 0;
-    result += (100 * organism.Cells[index].cycles) + (10 * organism.Cells[index].current) + (1 * @as(usize, @boolToInt(organism.Cells[index].state)));
+test "test " {
+    var t = Structure.init(std.testing.allocator, 128);
+    defer t.deinit();
 
-    return result;
-}
-
-test "cell" {
-    const cycles = render_cells(1000, 16, 10);
-    std.debug.print("{any}  \n", .{cycles - 12297829382473034410});
+    _ = try t.simulate(100);
+    std.debug.print("t : {any}\n", .{t.Cells});
 }
