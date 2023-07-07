@@ -1,7 +1,7 @@
 //!                 Main.zig
-//!     AUTHOR 			aryanrsuri
 //!     DATE CREATED    July 4, 2023
-//!     LICENCE 		../LICENSE (GNU)
+//!     LICENSE        GNU
+//!     COPYRIGHT (C) 2023 aryanrsuri
 //!
 //!     Main.zig implements cycle_flatten() priv
 //!     Main.zig implements grid() priv
