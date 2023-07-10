@@ -15,7 +15,7 @@ const raylib = @cImport({
 
 pub var gpa_stream = std.heap.GeneralPurposeAllocator(.{}){};
 
-/// cycle flatte () flattens the cycle of structure into three array outups
+/// cycle flatten () flattens the cycle of structure into three array outups
 /// @param { cell.Structure } Structure to cycle
 /// @param { usize } size of structure (n of cells)
 /// @returns [3][size]usize array of flat struct
